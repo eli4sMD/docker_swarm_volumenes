@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  mysql:
+      image: mysql:debian
+      ports:
+        - "3306:3306"
+      volumes:
+        - ./mysql-datos:/var/lib/mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: 1234
+        MYSQL_DATABASE: prueba
+
+  node:
+      image: image_node
+      deploy:
+        replicas: 3
+      depends_on:
+        - mysql
+      volumes:
+        - ./node-datos:/servidor
+      ports:
+        - "8090:8080"
+        
+  apache:
+    image: image_apache
+    deploy:
+      replicas: 3
+    depends_on:
+      - mysql
+    volumes:
+      - ./apache-datos:/var/www/html
+    ports:
+      - "8080:80"
+
+  
+
+  
